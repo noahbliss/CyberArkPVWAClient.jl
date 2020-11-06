@@ -64,6 +64,7 @@ function psmconnect(pvwauri, cookieset, accountid, reason, target)
                 if cookie.name == "CA66666"
                         headerauth = cookie.value
                 end
+        end
         pvwahost = match(r"^http[s]?://(.*)/.*", pvwauri).captures[1]
         cookiejar = Dict{String, Set{HTTP.Cookie}}(pvwahost => cookieset)
         headers = ["Content-Type" => "application/json", "X-CA66666" => headerauth ]
