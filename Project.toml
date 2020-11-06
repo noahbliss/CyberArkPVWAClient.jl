@@ -1,4 +1,4 @@
-name = "CyberarkPVWAClient"
+name = "CyberArkPVWAClient"
 uuid = "842c8c75-e601-4f84-b414-b792984ce9c7"
 authors = ["Noah <noah@superuser.sh>"]
 version = "0.1.0"
