@@ -36,7 +36,7 @@ end
 
 # Requests your query, returns the JSON response as a data structure.
 # usage: webreq("https://cyberark.org.local/PasswordVault", cookieset, "ExtendedAccounts")
-function get(pvwauri, cookieset, query)
+function request(pvwauri, cookieset, query)
         uri = "$pvwauri/api/$query"
         pvwahost = match(r"^http[s]?://(.*)/.*", pvwauri).captures[1]
         cookiejar = Dict{String, Set{HTTP.Cookie}}(pvwahost => cookieset)
@@ -57,7 +57,7 @@ function get(pvwauri, cookieset, query)
         # return response.body
 end
 
-function getrdp(pvwauri, cookieset, accountid, reason, target)
+function psmconnect(pvwauri, cookieset, accountid, reason, target)
         uri = "$pvwauri/api/Accounts/$accountid/PSMConnect"
         for cookie in cookieset
                 if cookie.name == "CA66666"; headerauth = cookie.value; break; end
