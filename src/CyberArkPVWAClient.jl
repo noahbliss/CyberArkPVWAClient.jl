@@ -36,7 +36,7 @@ end
 
 # Requests your query, returns the JSON response as a data structure.
 # usage: webreq("https://cyberark.org.local/PasswordVault", cookieset, "ExtendedAccounts")
-function webreq(pvwauri, cookieset, query)
+function get(pvwauri, cookieset, query)
         uri = "$pvwauri/api/$query"
         pvwahost = match(r"^http[s]?://(.*)/.*", pvwauri).captures[1]
         cookiejar = Dict{String, Set{HTTP.Cookie}}(pvwahost => cookieset)
@@ -57,5 +57,34 @@ function webreq(pvwauri, cookieset, query)
         # return response.body
 end
 
+function getrdp(pvwauri, cookieset, accountid, reason, target)
+        uri = "$pvwauri/api/Accounts/$accountid/PSMConnect"
+        for cookie in cookieset
+                if cookie.name == "CA66666"; headerauth = cookie.value; break; end
+        end
+        cookiejar = Dict{String, Set{HTTP.Cookie}}(pvwahost => cookieset)
+        headers = ["Content-Type" => "application/json", "X-CA66666" => headerauth ]
+        payload = JSON.json(Dict(
+                "reason" => reason,
+                "ConnectionComponent" => "PSM-RDP",
+                "ConnectionParams" => Dict(
+                        "AllowMappingLocalDrives" => Dict(
+                                "value" => "Yes",
+                                "ShouldSave" => false
+                        ),
+                        "PSMRemoteMachine" => Dict(
+                                "value" => target,
+                                "ShouldSave" => false
+                        )
+                )
+        ))
+        response = HTTP.request("POST", uri, headers, payload; require_ssl_verification = false, cookies = true, cookiejar = cookiejar)
+        if response.status == 200
+                #return JSON.parse(String(response.body))
+                return String(response.body)
+        else
+                error(response.status)
+        end
+end
 
 end # module
