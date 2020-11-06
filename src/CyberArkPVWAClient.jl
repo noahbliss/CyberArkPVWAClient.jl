@@ -1,7 +1,7 @@
 module CyberArkPVWAClient
 
 # Exports first. -- The functions we want to get exported when using is called on this module.
-#export login,
+#export login, get, getrdp
 
 # Imports second. -- Import gives us all the functions, but doesn't define them globally. E.g. HTTP.request() but not request()
 import HTTP
