@@ -35,7 +35,7 @@ function login(pvwauri, method, causer, capass)
 end
 
 # Requests your query, returns the JSON response as a data structure.
-# usage: webreq("https://cyberark.org.local/PasswordVault", cookieset, "ExtendedAccounts")
+# usage: request("https://cyberark.org.local/PasswordVault", cookieset, "ExtendedAccounts")
 function request(pvwauri, cookieset, query)
         uri = "$pvwauri/api/$query"
         pvwahost = match(r"^http[s]?://(.*)/.*", pvwauri).captures[1]
@@ -59,9 +59,12 @@ end
 
 function psmconnect(pvwauri, cookieset, accountid, reason, target)
         uri = "$pvwauri/api/Accounts/$accountid/PSMConnect"
+        headerauth = "" # Lets us use the value in the scope of the whole function.
         for cookie in cookieset
-                if cookie.name == "CA66666"; headerauth = cookie.value; break; end
-        end
+                if cookie.name == "CA66666"
+                        headerauth = cookie.value
+                end
+        pvwahost = match(r"^http[s]?://(.*)/.*", pvwauri).captures[1]
         cookiejar = Dict{String, Set{HTTP.Cookie}}(pvwahost => cookieset)
         headers = ["Content-Type" => "application/json", "X-CA66666" => headerauth ]
         payload = JSON.json(Dict(
