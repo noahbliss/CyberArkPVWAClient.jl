@@ -17,10 +17,34 @@ accountsresult = CyberArkPVWAClient.request(pvwauri, cookieset, "ExtendedAccount
 To fetch RDP files you'll need the "AccountID" which is usually `##_#` e.g. `23_1`
 
 ```
-psmrdpfile = CyberArkPVWAClient.psmconnect(pvwauri, cookieset, "23_7", "Because I want to.", "someserver.skynet.local")
+target = "dc01.domain.local"
+reason = "Because I want to."
+accountid = "23_7"
+
+psmrdpfile = CyberArkPVWAClient.psmconnect(pvwauri, cookieset, accountid, reason, target)
 
 filename = "rdpswap.rdp"
 open(filename, "w")
 write(filename, psmrdpfile)
 run(`ca-rdp $filename`)
+```
+
+To make this process a bit more human-friendly, you can use the following function.
+```
+function getaccountid(username, address, connection, caaccounts)
+        for acc in caaccounts["Accounts"]#[1]
+                if acc["Properties"]["UserName"] == username &&
+                acc["Properties"]["Address"] == address &&
+                haskey(acc["ActionsDisplay"]["ConnectionDisplay"]["ConnectionComponents"], connection)
+                        return acc["AccountID"]
+                end
+        end
+end
+
+username = "domain-admin"
+address = "domain.local"
+connection = "PSM-RDP"
+
+accountid = getaccountid(username, address, connection, accountsresult)
+
 ```
