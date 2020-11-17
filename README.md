@@ -46,5 +46,4 @@ address = "domain.local"
 connection = "PSM-RDP"
 
 accountid = getaccountid(username, address, connection, accountsresult)
-
 ```
